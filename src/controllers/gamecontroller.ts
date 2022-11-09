@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Game } from "../protocols/game";
-import { insertGame, selectGame } from "../repositories/gameRepository.js";
+import { Rating } from "../protocols/rating";
+import { insertGame, insertRating, selectGame, setGameTrue } from "../repositories/gameRepository.js";
 
 export async function postGame(req:Request, res:Response) {
     const newGame = req.body as Game;
@@ -27,8 +28,13 @@ export async function getGames(req:Request, res:Response) {
 }
 
 export async function updateGame(req:Request, res:Response) {
+    const rating = req.body as Rating;
     try {
-        
+        await setGameTrue(rating.gameId);
+
+        await insertRating(rating);
+
+        res.status(200).send("updated")
     } catch (error) {
         return res.status(500).send(error.message)       
     }

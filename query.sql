@@ -1,5 +1,5 @@
 CREATE TABLE "games" (
-	"id" SERIAL NOT NULL,
+	"id" SERIAL NOT NULL UNIQUE,
     "tittle" TEXT NOT NULL,
     "console" TEXT NOT NULL,
     "genre" TEXT NOT NULL,
@@ -7,8 +7,8 @@ CREATE TABLE "games" (
 );
 
 CREATE TABLE "rating" (
-    "id" SERIAL NOT NULL,
-    "rating" NUMBER,
+    "id" SERIAL NOT NULL UNIQUE,
+    "rating" INTEGER,
     "review" TEXT,
-    "gameId" NUMBER NOT NULL REFERENCES "games"("id")
-)
+    "gameId" INTEGER NOT NULL REFERENCES "games"("id")
+);
