@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Game } from "../protocols/game";
 import { Rating } from "../protocols/rating";
-import { insertGame, insertRating, selectGame, setGameTrue } from "../repositories/gameRepository.js";
+import { insertGame, insertRating, selectGame, selectGameByGenre, selectGameByConsole, setGameTrue } from "../repositories/gameRepository.js";
 
 export async function postGame(req:Request, res:Response) {
     const newGame = req.body as Game;
@@ -16,10 +16,22 @@ export async function postGame(req:Request, res:Response) {
 }
 
 export async function getGames(req:Request, res:Response) {
-    try {
-        const {rows: games} = await selectGame();
+    const genre = req.query.genre as string;
+    const console = req.query.console as string;
 
-        console.log(games)
+    try {
+        if (genre) {
+            const {rows: games} = await selectGameByGenre(genre);
+
+            return res.status(200).send(games);
+        }
+        if (console) {
+            const {rows: games} = await selectGameByConsole(console);
+
+            return res.status(200).send(games);
+        }
+        const {rows: games} = await selectGame();
+        
         return res.status(200).send(games);
     } catch (error) {
         return res.status(500).send(error.message)        

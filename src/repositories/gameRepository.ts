@@ -17,7 +17,21 @@ export async function selectGame() {
     `);
 }
 
-export async function setGameTrue(gameId:number) {
+export async function selectGameByGenre(genre: string) {
+    return connection.query(`
+    SELECT * FROM games
+    WHERE genre = $1
+    `,[genre]);
+}
+
+export async function selectGameByConsole(console: string) {
+    return connection.query(`
+    SELECT * FROM games
+    WHERE console = $1
+    `,[console]);
+}
+
+export async function setGameTrue(gameId: number) {
     return connection.query(`
     UPDATE games
     SET status = true
@@ -25,11 +39,11 @@ export async function setGameTrue(gameId:number) {
     `, [gameId])
 }
 
-export async function insertRating(rating:Rating) {
+export async function insertRating(rating: Rating) {
     return connection.query(`
     INSERT INTO rating
     (rating, review, "gameId")
     VALUES
     ($1, $2, $3)
-    `,[rating.rating, rating.review, rating.gameId])
+    `, [rating.rating, rating.review, rating.gameId])
 }
